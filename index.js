@@ -1,21 +1,19 @@
-// CommonJs
-const fastify = require("fastify")({
-  logger: true,
+const express = require("express");
+
+const app = express();
+
+app.use((req, res, next) => {
+  console.log("Time: ", Date.now());
+  next();
 });
 
-fastify.get("/", async (request, reply) => {
-  return { hello: "world" };
+app.use("/request-type", (req, res, next) => {
+  console.log("Request type: ", req.method);
+  next();
 });
 
-/**
- * Run the server!
- */
-const start = async () => {
-  try {
-    await fastify.listen({ port: 3000 });
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-};
-start();
+app.get("/", (req, res) => {
+  res.send("Successful response.");
+});
+
+app.listen(3000, () => console.log("Example app is listening on port 3000."));
